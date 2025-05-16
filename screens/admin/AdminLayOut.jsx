@@ -1,0 +1,105 @@
+import React from 'react';
+import { View } from 'react-native';
+import Dashboard from './Dashboard';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { style } from '../../style/style';
+import ManageProduct from './adminStack/ManageProduct';
+import ManageStaff from './adminStack/ManageStaff';
+import ListServices from './ListServices';
+import ManageServices from './adminStack/ManageServices';
+
+const AdminLayout = () => {
+    const Tab = createBottomTabNavigator();
+    
+    return (
+        <View style={{flex: 1}}>
+            <Tab.Navigator 
+                screenOptions={{headerShown: false}} 
+                initialRouteName='dashboard'
+            >
+                <Tab.Screen 
+                    name='staff' 
+                    component={ManageStaff} 
+                    options={{
+                        tabBarIcon: ({focused}) => (
+                            <View style={{alignItems: 'center'}}>
+                                <Ionicons name="people" size={30} />
+                                {focused && (
+                                    <View style={[style.activeTab,style.activeTabDashBoard]} />
+                                )}
+                            </View>
+                        ),
+                        tabBarLabel: 'Staff',
+                        tabBarLabelStyle: {fontSize: 12, marginBottom: 5,color:"gray"}
+                    }}
+                />
+                <Tab.Screen 
+                    name='services' 
+                    component={ManageServices} 
+                    options={{
+                        tabBarIcon: ({focused}) => (
+                            <View style={{alignItems: 'center'}}>
+                                <Ionicons name="cut-outline" size={30} />
+                                {focused && (
+                                    <View style={[style.activeTab,style.activeTabDashBoard]} />
+                                )}
+                            </View>
+                        ),
+                        tabBarLabel: 'Services',
+                        tabBarLabelStyle: {fontSize: 12, marginBottom: 5,color:"gray"}
+                    }}
+                />
+                <Tab.Screen 
+                    name='dashboard' 
+                    component={Dashboard} 
+                    options={{
+                      tabBarLabelStyle: {display:"none"},
+                        tabBarIcon: ({focused}) => (
+                            <View style={style.bottomHomeIcon}>
+                                <Ionicons name="pie-chart" size={30} color="white"/>
+                                {focused && (
+                                    <View style={style.activeTab} />
+                                )}
+                            </View>
+                        ),
+                    }}
+                />
+                <Tab.Screen 
+                    name='products' 
+                    component={ManageProduct} 
+                    options={{
+                        tabBarIcon: ({focused}) => (
+                            <View style={{alignItems: 'center'}}>
+                                <Ionicons name="cube" size={30} />
+                                {focused && (
+                                    <View style={[style.activeTab,style.activeTabDashBoard]} />
+                                )}
+                            </View>
+                        ),
+                        tabBarLabel: 'Products',
+                        tabBarLabelStyle: {fontSize: 12, marginBottom: 5,color:"gray"}
+                    }}
+                />
+                <Tab.Screen 
+                    name='logOut' 
+                    component={ManageProduct} 
+                    options={{
+                        tabBarIcon: ({focused}) => (
+                            <View style={{alignItems: 'center'}}>
+                                <Ionicons name="log-out-outline" size={30} />
+                                {focused && (
+                                    <View style={[style.activeTab,style.activeTabDashBoard]} />
+                                )}
+                            </View>
+                        ),
+                        tabBarLabel: 'Logout',
+                        tabBarLabelStyle: {fontSize: 12, marginBottom: 5,color:"gray"}
+                    }}
+                />
+            </Tab.Navigator>
+        </View>
+    );
+};
+
+export default AdminLayout;
