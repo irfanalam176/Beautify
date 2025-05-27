@@ -10,11 +10,13 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {style} from '../../style/style';
 import { url } from '../../constants';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const LoginAdmin = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +89,9 @@ const LoginAdmin = ({navigation}) => {
             visibilityTime: 10000,
             swipeable: true,
           });
-          navigation.navigate('adminLayout');
+
+         await AsyncStorage.setItem("isLogin", JSON.stringify(true)); 
+          checkLoginStatus()
         }
       } catch (e) {
         console.log("Login Failed"+e);
@@ -111,6 +115,17 @@ const LoginAdmin = ({navigation}) => {
       });
     }
   };
+
+  async function checkLoginStatus(){
+      const isLogin = await AsyncStorage.getItem("isLogin")
+      if(isLogin){
+        navigation.replace("adminLayout")
+      }
+      
+  }
+  useFocusEffect(useCallback(()=>{
+    checkLoginStatus()
+  },[]))
 
   return (
     <ImageBackground

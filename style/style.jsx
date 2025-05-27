@@ -302,8 +302,9 @@ export const style = StyleSheet.create({
   galleryGrid:{
     flexDirection:"row",
     flexWrap:"wrap",
-    justifyContent:"space-between",
+    justifyContent:"flex-start",
     rowGap:15,
+    columnGap:15
   },
   fullScreenModal: {
     flex: 1,
@@ -355,6 +356,13 @@ export const style = StyleSheet.create({
   },
   tableHeader:{
     flexDirection:"row",
+
+  },
+  dailySaleTableHeading:{
+    flex:1
+  },
+  dailySaleTableData:{
+    flex:1
   },
   tableHeading:{
     backgroundColor:secondaryColor,
@@ -383,6 +391,9 @@ export const style = StyleSheet.create({
     width:50,
     height:50
   },
+  dailyPLtable:{
+    width:width-20,
+  },
 
   // dropdown style
     label: {
@@ -408,4 +419,5 @@ export const style = StyleSheet.create({
       height: 40,
       fontSize: 16,
     },
+
 });

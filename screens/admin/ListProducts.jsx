@@ -23,6 +23,11 @@ const ListProducts = ({navigation}) => {
   const [deleteId, setDeleteId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [searchText, setSearchText] = useState('');
+  const filteredList = productList.filter(item =>
+    item.name.toLowerCase().includes(searchText.toLowerCase()),
+  );
   const handleDeleteProduct = async () => {
     if (!deleteId) return;
 
@@ -87,17 +92,11 @@ const ListProducts = ({navigation}) => {
       <View style={{flexDirection: 'row', gap: 5}}>
         <TextInput
           placeholder="Search Product"
-          style={[style.input, {paddingLeft: 10, width: '70%'}]}
+          style={[style.input, {paddingLeft: 10, width: '100%'}]}
           placeholderTextColor={'gray'}
+          value={searchText}
+          onChangeText={text => setSearchText(text)}
         />
-        <TouchableOpacity>
-          <Ionicons
-            name="search"
-            size={30}
-            color="white"
-            style={style.mainBtn}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Add Product Button */}
@@ -131,7 +130,7 @@ const ListProducts = ({navigation}) => {
           </View>
 
           {/* Table Body */}
-          {productList.map((item, key) => (
+          {filteredList.map((item, key) => (
             <View style={style.tableRow} key={key}>
               <View style={style.tableData}>
                 {item.image ? (
@@ -199,8 +198,7 @@ const ListProducts = ({navigation}) => {
                   {backgroundColor: 'red', justifyContent: 'center'},
                 ]}
                 onPress={handleDeleteProduct}
-                disabled={isDeleting}
-                >
+                disabled={isDeleting}>
                 <Text style={style.mainBtnTxt}>Delete</Text>
                 {isDeleting ? <ActivityIndicator color={'white'} /> : ''}
               </Pressable>

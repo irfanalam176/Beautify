@@ -1,13 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import Dashboard from './Dashboard';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { style } from '../../style/style';
 import ManageProduct from './adminStack/ManageProduct';
 import ManageStaff from './adminStack/ManageStaff';
-import ListServices from './ListServices';
 import ManageServices from './adminStack/ManageServices';
+import HomeStack from './adminStack/HomeStack';
+import LogOutAdmin from './LogOutAdmin';
 
 const AdminLayout = () => {
     const Tab = createBottomTabNavigator();
@@ -16,7 +16,7 @@ const AdminLayout = () => {
         <View style={{flex: 1}}>
             <Tab.Navigator 
                 screenOptions={{headerShown: false}} 
-                initialRouteName='dashboard'
+                initialRouteName='home'
             >
                 <Tab.Screen 
                     name='staff' 
@@ -51,8 +51,8 @@ const AdminLayout = () => {
                     }}
                 />
                 <Tab.Screen 
-                    name='dashboard' 
-                    component={Dashboard} 
+                    name='home' 
+                    component={HomeStack} 
                     options={{
                       tabBarLabelStyle: {display:"none"},
                         tabBarIcon: ({focused}) => (
@@ -83,7 +83,7 @@ const AdminLayout = () => {
                 />
                 <Tab.Screen 
                     name='logOut' 
-                    component={ManageProduct} 
+                    component={LogOutAdmin} 
                     options={{
                         tabBarIcon: ({focused}) => (
                             <View style={{alignItems: 'center'}}>

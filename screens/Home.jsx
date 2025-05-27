@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Image, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import { style } from '../style/style';
 import Slider from '../components/Slider';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import { useFocusEffect } from '@react-navigation/native';
+import { url } from '../constants';
 
 const Home = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const galleryImages = [
-    require("../assets/images/service.jpg"),
-    require("../assets/images/service.jpg"),
-    require("../assets/images/service.jpg"),
-    require("../assets/images/service.jpg"),
-  ];
+  const[galleryImages,setGalleryImages] = useState([])
 
   const openImage = (image) => {
     setSelectedImage(image);
@@ -25,6 +22,21 @@ const Home = ({ navigation }) => {
     setModalVisible(false);
   };
 
+  const getImages = async () => {
+    try {
+      const response = await fetch(`${url}/gallery/get-images`, { method: 'GET' });
+      const result = await response.json();
+      if (response.ok) {
+        setGalleryImages(result);
+      }
+    } catch (e) {
+      console.log('Error getting images: ' + e);
+      Alert.alert('Error', 'Cannot Get Images');
+    }
+  };
+  useFocusEffect(useCallback(()=>{
+    getImages()
+  },[]))
   return (
     <View style={style.mainBg}>
       {/* header */}
@@ -40,17 +52,24 @@ const Home = ({ navigation }) => {
         {/* Gallery */}
         <Text style={style.mainTitle}>Our Gallery</Text>
       
-        <View style={style.galleryGrid}>
-          {galleryImages.map((image, index) => (
-            <TouchableOpacity 
-              key={index} 
-              onPress={() => openImage(image)}
-              activeOpacity={0.8}
-            >
-              <Image source={image} style={style.galleryPic} />
-            </TouchableOpacity>
-          ))}
-        </View>
+    
+          <View style={style.galleryGrid}>
+            {galleryImages.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => openImage(item.image)}
+                activeOpacity={0.8}
+                style={[
+                  style.galleryPicWrapper
+                ]}
+              >
+                <Image
+                  source={{ uri: `${url}/uploads/${item.image}` }}
+                  style={style.galleryPic}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
       </ScrollView>
 
       {/* Full Screen Image Modal with Zoom */}
@@ -78,7 +97,7 @@ const Home = ({ navigation }) => {
               style={style.zoomableView}
             >
               <Image 
-                source={selectedImage} 
+                source={{uri:`${url}/uploads/${selectedImage}`}} 
                 style={style.fullScreenImage}
                 resizeMode="contain"
               />

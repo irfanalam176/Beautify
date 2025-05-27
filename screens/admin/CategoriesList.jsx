@@ -1,97 +1,76 @@
 import {
   View,
   Text,
+  ActivityIndicator,
   ScrollView,
-  Image,
   TouchableOpacity,
-  TextInput,
   Modal,
   Pressable,
-  Alert,
-  ActivityIndicator,
+  TextInput,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, {useCallback, useEffect, useState} from 'react';
 import {style} from '../../style/style';
-
 import {url} from '../../constants';
 import {useFocusEffect} from '@react-navigation/native';
-
-const ListServices = ({navigation}) => {
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [servicesList, setServicesList] = useState([]);
-  const [deleteId, setDeleteId] = useState();
+const CategoriesList = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteId, setDeleteId] = useState();
 
   const [searchText, setSearchText] = useState('');
-  const filteredList = servicesList.filter(item =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()),
+  const filteredList = categoriesList.filter(item =>
+    item.category_name.toLowerCase().includes(searchText.toLowerCase()),
   );
-  const handleDeleteService = async () => {
-    if (!deleteId) return;
 
-    try {
-      setIsDeleting(true);
-      const response = await fetch(
-        `${url}/services/delete-service/${deleteId}`,
-        {
-          method: 'DELETE',
-        },
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        // Refresh product list after successful deletion
-        getServices();
-        setDeleteModal(false);
-        Alert.alert('Success', 'service deleted successfully');
-      } else {
-        Alert.alert('Error', result.message || 'Failed to delete service');
-      }
-    } catch (error) {
-      console.error('Error deleting service:', error);
-      Alert.alert('Error', 'An error occurred while deleting the service');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  function openDeleteModal(productId) {
-    setDeleteId(productId);
-    setDeleteModal(true);
-  }
-
-  async function getServices() {
+  const getCategories = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${url}/services/get-services`, {
+      const response = await fetch(`${url}/products/get-categories`, {
         method: 'GET',
       });
       const result = await response.json();
-
-      setServicesList(result.list || []);
-    } catch (error) {
-      console.error('Error fetching services:', error);
+      setCategoriesList(result.list);
+    } catch (e) {
+      console.log('Cannot get Categories' + e);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  async function deleteRecord() {
+    try {
+      setIsDeleting(true);
+      const response = await fetch(
+        `${url}/products/delete-category/${deleteId}`,
+        {method: 'DELETE'},
+      );
+      if (response.ok) {
+        getCategories();
+        setDeleteModal(false);
+      }
+    } catch (e) {
+      console.log('Cannot Delete' + e);
+      Alert.alert('Error', 'Cannot Delete');
+    } finally {
+      setIsDeleting(false);
+    }
   }
+
   useFocusEffect(
     useCallback(() => {
-      getServices();
+      getCategories();
     }, []),
   );
 
   return (
     <View style={style.mainBg}>
-      <Text style={style.mainHeading}>Manage Services</Text>
-
+      <Text style={style.mainHeading}>Categories List</Text>
       {/* Search Bar */}
       <View style={{flexDirection: 'row', gap: 5}}>
         <TextInput
-          placeholder="Search Services"
+          placeholder="Search Categories"
           style={[style.input, {paddingLeft: 10, width: '100%'}]}
           placeholderTextColor={'gray'}
           value={searchText}
@@ -99,15 +78,13 @@ const ListServices = ({navigation}) => {
         />
       </View>
 
-      {/* Add Product Button */}
+      {isLoading ? <ActivityIndicator color={'#BE5985'} size={50} /> : ''}
       <TouchableOpacity
         style={[style.mainBtn, {marginVertical: 10}]}
-        onPress={() => navigation.navigate('addServices')}>
-        <Text style={style.mainBtnTxt}>Add Service</Text>
+        onPress={() => navigation.navigate('addCategories')}>
+        <Text style={style.mainBtnTxt}>Add Categories</Text>
       </TouchableOpacity>
-
-      {isLoading ? <ActivityIndicator color={'#BE5985'} size={50} /> : ''}
-      {/* Product List Table */}
+      <Text style={style.mainTitle}>Categories List</Text>
       <ScrollView
         contentContainerStyle={style.tableContainer}
         horizontal={true}
@@ -120,46 +97,32 @@ const ListServices = ({navigation}) => {
           showsVerticalScrollIndicator={false}>
           {/* Table Head */}
           <View style={style.tableHeader}>
-            <Text style={style.tableHeading}>Image</Text>
-            <Text style={style.tableHeading}>Name</Text>
-            <Text style={style.tableHeading}>Description</Text>
-            <Text style={style.tableHeading}>Price</Text>
+            <Text style={style.tableHeading}>#</Text>
+            <Text style={style.tableHeading}>Category Name</Text>
             <Text style={style.tableHeading}>Action</Text>
           </View>
-
-          {/* Table Body */}
+          {/* table body */}
           {filteredList.map((item, key) => (
             <View style={style.tableRow} key={key}>
-              <View style={style.tableData}>
-                {item.image ? (
-                  <Image
-                    source={{uri: `${url}/uploads/${item.image}`}}
-                    style={style.tableImage}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <View style={style.noImage}>
-                    <Ionicons name="image-outline" size={24} color="gray" />
-                  </View>
-                )}
-              </View>
-              <Text style={style.tableData}>{item.name}</Text>
-              <Text style={style.tableData}>{item.description}</Text>
-              <Text style={style.tableData}>{item.price}PKR</Text>
+              <Text style={style.tableData}>{key + 1}</Text>
+              <Text style={style.tableData}>{item.category_name}</Text>
               <View style={style.tableData}>
                 <View style={[style.flexRow, {gap: 20}]}>
                   <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('editService', {
-                        serviceId: item.service_id,
-                      });
-                    }}>
+                    onPress={() =>
+                      navigation.navigate('editCategory', {
+                        categoryId: item.id,
+                      })
+                    }>
                     <Text style={{color: 'green', fontWeight: 'bold'}}>
                       Edit
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => openDeleteModal(item.service_id)}>
+                    onPress={() => {
+                      setDeleteId(item.id);
+                      setDeleteModal(true);
+                    }}>
                     <Text style={{color: 'red', fontWeight: 'bold'}}>
                       Delete
                     </Text>
@@ -181,9 +144,9 @@ const ListServices = ({navigation}) => {
         }}>
         <View style={style.centeredView}>
           <View style={style.modalView}>
-            <Text style={style.mainTitle}>Delete Service</Text>
+            <Text style={style.mainTitle}>Delete Record</Text>
             <Text style={{color: 'white', marginBottom: 20}}>
-              Are you sure you want to delete this service?
+              Are you sure you want to delete this Record?
             </Text>
 
             <View style={[style.flexRow, {gap: 10}]}>
@@ -193,7 +156,7 @@ const ListServices = ({navigation}) => {
                   style.flexRow,
                   {backgroundColor: 'red', justifyContent: 'center'},
                 ]}
-                onPress={handleDeleteService}
+                onPress={deleteRecord}
                 disabled={isDeleting}>
                 <Text style={style.mainBtnTxt}>Delete</Text>
                 {isDeleting ? <ActivityIndicator color={'white'} /> : ''}
@@ -211,4 +174,4 @@ const ListServices = ({navigation}) => {
   );
 };
 
-export default ListServices;
+export default CategoriesList;

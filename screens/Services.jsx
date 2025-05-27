@@ -1,8 +1,9 @@
-import {TouchableOpacity, View, Text, Image, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {TouchableOpacity, View, Text, Image, ScrollView, Alert} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {style} from '../style/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {url} from '../constants';
+import { useFocusEffect } from '@react-navigation/native';
 const Services = ({navigation}) => {
   const [servicesList, setServicesList] = useState([]);
 
@@ -11,14 +12,20 @@ const Services = ({navigation}) => {
   }
 
   async function getServices() {
-    const response = await fetch(`${url}/services/get-services`, {method: 'GET'});
+    try{
+      const response = await fetch(`${url}/services/get-services`, {method: 'GET'});
     const result = await response.json();
-    
     setServicesList(result.list);
+    }catch(e){
+      console.log("Cannot get Services" + e);
+      Alert.alert("Error","Cannot Get Services")
+      
+    }
+    
   }
-  useEffect(() => {
-    getServices();
-  }, []);
+ useFocusEffect(useCallback(()=>{
+  getServices()
+ },[]))
   return (
     <View style={style.mainBg}>
       {/* header */}

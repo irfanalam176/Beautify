@@ -20,6 +20,11 @@ const ListStaff = ({navigation}) => {
   const [deleteId, setDeleteId] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+    const [searchText, setSearchText] = useState('');
+    const filteredList = beauticianList.filter(item =>
+      item.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
   async function getBeauticians() {
     try {
       setIsLoading(true);
@@ -66,17 +71,11 @@ const ListStaff = ({navigation}) => {
       <View style={{flexDirection: 'row', gap: 5}}>
         <TextInput
           placeholder="Search Beautician"
-          style={[style.input, {paddingLeft: 10, width: '70%'}]}
+          style={[style.input, {paddingLeft: 10, width: '100%'}]}
           placeholderTextColor={'gray'}
+            value={searchText}
+           onChangeText={text => setSearchText(text)}
         />
-        <TouchableOpacity>
-          <Ionicons
-            name="search"
-            size={30}
-            color="white"
-            style={style.mainBtn}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Add Beautician Button */}
@@ -101,7 +100,7 @@ const ListStaff = ({navigation}) => {
             <Text style={style.tableHeading}>Action</Text>
           </View>
           {/* table body */}
-          {beauticianList.map((item, key) => (
+          {filteredList.map((item, key) => (
             <View style={style.tableRow} key={key}>
               <Text style={style.tableData}>{item.name}</Text>
               <Text style={style.tableData}>{item.specialization}</Text>
