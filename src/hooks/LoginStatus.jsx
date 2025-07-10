@@ -13,6 +13,8 @@ export const useLoginStatus = ({navigation}) => {
           navigation.replace("layout");
         } else if (isLogin && isAdmin) {
           navigation.replace("adminLayout");
+        }else{
+          navigation.replace("login");
         }
       } catch (e) {
         console.log(e + " Cannot get async storage data");
