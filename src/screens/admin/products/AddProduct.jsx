@@ -23,6 +23,7 @@ const AddProduct = ({navigation}) => {
   const [newProduct, setNewProduct] = useState({
     name: '',
     description: '',
+    cost:'',
     price: '',
     quantity: '',
     image: null,
@@ -49,6 +50,7 @@ const AddProduct = ({navigation}) => {
     setNewProduct({
       name: '',
       description: '',
+      cost:'',
       price: '',
       quantity: '',
       image: null,
@@ -61,6 +63,7 @@ const AddProduct = ({navigation}) => {
     if (
       !newProduct.name ||
       !newProduct.price ||
+      !newProduct.cost ||
       !newProduct.description ||
       !newProduct.image ||
       !category
@@ -72,6 +75,7 @@ const AddProduct = ({navigation}) => {
     const formData = new FormData();
     formData.append('name', newProduct.name);
     formData.append('description', newProduct.description);
+    formData.append('cost', newProduct.cost);
     formData.append('price', newProduct.price);
     formData.append('quantity', newProduct.quantity);
     formData.append('category_id', category);
@@ -171,6 +175,16 @@ const AddProduct = ({navigation}) => {
             />
           </View>
 
+          <View style={style.inputBox}>
+            <TextInput
+              placeholder="Cost *"
+              style={style.input}
+              value={newProduct.cost}
+              onChangeText={text => handleInputChange('cost', text)}
+              keyboardType="numeric"
+            />
+          </View>
+          
           <View style={style.inputBox}>
             <TextInput
               placeholder="Price *"

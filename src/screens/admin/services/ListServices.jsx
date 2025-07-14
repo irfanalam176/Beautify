@@ -123,6 +123,7 @@ const ListServices = ({navigation}) => {
             <Text style={style.tableHeading}>Image</Text>
             <Text style={style.tableHeading}>Name</Text>
             <Text style={style.tableHeading}>Description</Text>
+            <Text style={style.tableHeading}>cost</Text>
             <Text style={style.tableHeading}>Price</Text>
             <Text style={style.tableHeading}>Action</Text>
           </View>
@@ -145,6 +146,7 @@ const ListServices = ({navigation}) => {
               </View>
               <Text style={style.tableData}>{item.name}</Text>
               <Text style={style.tableData}>{item.description}</Text>
+              <Text style={style.tableData}>{item.cost}PKR</Text>
               <Text style={style.tableData}>{item.price}PKR</Text>
               <View style={style.tableData}>
                 <View style={[style.flexRow, {gap: 20}]}>

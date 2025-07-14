@@ -21,6 +21,7 @@ const AddServices = ({navigation}) => {
   const [newService, setNewService] = useState({
     name: '',
     description: '',
+    cost:'',
     price: '',
     image: null,
   });
@@ -46,6 +47,7 @@ const AddServices = ({navigation}) => {
     setNewService({
       name: '',
       description: '',
+      cost:'',
       price: '',
       image: null,
     });
@@ -57,6 +59,7 @@ const AddServices = ({navigation}) => {
     if (
       !newService.name ||
       !newService.price ||
+      !newService.cost ||
       !newService.description ||
       !newService.image
     ) {
@@ -67,6 +70,7 @@ const AddServices = ({navigation}) => {
     const formData = new FormData();
     formData.append('name', newService.name);
     formData.append('description', newService.description);
+    formData.append('cost', newService.cost);
     formData.append('price', newService.price);
     formData.append('image', {
       uri: newService.image.uri,
@@ -152,6 +156,16 @@ const AddServices = ({navigation}) => {
             />
           </View>
 
+          <View style={style.inputBox}>
+            <TextInput
+              placeholder="Cost *"
+              style={style.input}
+              value={newService.cost}
+              onChangeText={text => handleInputChange('cost', text)}
+              keyboardType="numeric"
+            />
+          </View>
+        
           <View style={style.inputBox}>
             <TextInput
               placeholder="Price *"

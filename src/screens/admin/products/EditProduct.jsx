@@ -24,6 +24,7 @@ const EditProduct = ({navigation,route}) => {
       const [newProduct, setNewProduct] = useState({
         name: '',
         description: '',
+        cost: '',
         price: '',
         quantity: '',
         image: null,
@@ -51,6 +52,7 @@ const EditProduct = ({navigation,route}) => {
     setNewProduct({
       name: '',
       description: '',
+      cost: '',
       price: '',
       quantity:'',
       image: null,
@@ -60,7 +62,7 @@ const EditProduct = ({navigation,route}) => {
   };
 
   const handleUpdateProduct = async () => {
-    if (!newProduct.name || !newProduct.price || !newProduct.description || !newProduct.image || !category) {
+    if (!newProduct.name ||!newProduct.cost || !newProduct.price || !newProduct.description || !newProduct.image || !category) {
       Alert.alert('Fields are Required', 'Please fill all required fields');
       return;
     }
@@ -68,6 +70,7 @@ const EditProduct = ({navigation,route}) => {
     const formData = new FormData();
     formData.append('name', newProduct.name);
     formData.append('description', newProduct.description);
+    formData.append('cost', newProduct.cost);
     formData.append('price', newProduct.price);
     formData.append('quantity', parseInt(newProduct.quantity));
     formData.append('category_id', category);
@@ -132,9 +135,12 @@ const EditProduct = ({navigation,route}) => {
 
         const response = await fetch(`${url}/products/get-product-by-id/${productId}`,{method:"GET"})
         const result = await response.json()
+        console.log(result);
+        
         setNewProduct({
           name:result.name,
           description:result.description,
+          cost:result.cost,
           price:result.price,
           quantity:result.quantity.toString(),
           image:{
@@ -202,6 +208,16 @@ const EditProduct = ({navigation,route}) => {
               />
             </View>
 
+            <View style={style.inputBox}>
+              <TextInput
+                placeholder="cost *"
+                style={style.input}
+                value={newProduct.cost}
+                onChangeText={text => handleInputChange('cost', text)}
+                keyboardType="numeric"
+              />
+            </View>
+           
             <View style={style.inputBox}>
               <TextInput
                 placeholder="Price *"

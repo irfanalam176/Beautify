@@ -112,6 +112,7 @@ const SaleRecord = ({navigation}) => {
             style={style.input}
             placeholderTextColor={'gray'}
             value={newSale.quantity}
+            keyboardType='numeric'
             onChangeText={text => handleInputChange('quantity', text)}
           />
         </View>

@@ -22,6 +22,7 @@ const EditService = ({navigation,route}) => {
   const [newService, setNewService] = useState({
     name: '',
     description: '',
+    cost:'',
     price: '',
     image: null,
   });
@@ -48,6 +49,7 @@ const EditService = ({navigation,route}) => {
     setNewService({
       name: '',
       description: '',
+      cost: '',
       price: '',
       image: null,
     });
@@ -55,7 +57,7 @@ const EditService = ({navigation,route}) => {
   };
 
   const handleUpdateService = async () => {
-    if (!newService.name || !newService.price || !newService.description || !newService.image) {
+    if (!newService.name ||!newService.cost, !newService.price || !newService.description || !newService.image) {
       Alert.alert('Fields are Required', 'Please fill all required fields');
       return;
     }
@@ -63,6 +65,7 @@ const EditService = ({navigation,route}) => {
     const formData = new FormData();
     formData.append('name', newService.name);
     formData.append('description', newService.description);
+    formData.append('cost', newService.cost);
     formData.append('price', newService.price);
     
     if(newService.image?.isLocal){
@@ -118,6 +121,7 @@ const EditService = ({navigation,route}) => {
         setNewService({
           name:result.name,
           description:result.description,
+          cost:result.cost,
           price:result.price,
           image:{
             uri: `${url}/uploads/${result.image}`,
@@ -182,6 +186,16 @@ const EditService = ({navigation,route}) => {
               />
             </View>
 
+            <View style={style.inputBox}>
+              <TextInput
+                placeholder="cost *"
+                style={style.input}
+                value={newService.cost}
+                onChangeText={text => handleInputChange('cost', text)}
+                keyboardType="numeric"
+              />
+            </View>
+          
             <View style={style.inputBox}>
               <TextInput
                 placeholder="Price *"

@@ -32,6 +32,8 @@ const TotalSaleRecord = () => {
     async function getDailyData(){
       const response = await fetch(`${url}/sale/get-dailyProfitLoss`,{method:"GET"})
       const result = await response.json()
+      console.log(result);
+      
       setDailyData(result)
       
     }
@@ -55,12 +57,14 @@ const TotalSaleRecord = () => {
       <View style={style.dailyPLtable}>
             <View style={style.tableHeader}>
             <Text style={[style.tableHeading,style.dailySaleTableHeading]}>Total Sale</Text>
+            <Text style={[style.tableHeading,style.dailySaleTableHeading]}>Total Cost</Text>
             <Text style={[style.tableHeading,style.dailySaleTableHeading]}>Total Expenses</Text>
-            <Text style={[style.tableHeading,style.dailySaleTableHeading]}>Profit/Loss</Text>
+            <Text style={[style.tableHeading,style.dailySaleTableHeading]}>Profit / Loss</Text>
           </View>
           {/* table body */}
           <View style={style.tableRow}>
             <Text style={[style.tableData,style.dailySaleTableData]}>{dailyData.total_sales}</Text>
+            <Text style={[style.tableData,style.dailySaleTableData]}>{dailyData.total_cost}</Text>
             <Text style={[style.tableData,style.dailySaleTableData]}>{dailyData.total_expenses}</Text>
             <Text style={[style.tableData,style.dailySaleTableData]}>{dailyData.profit_or_loss}</Text>
           </View>
@@ -86,6 +90,7 @@ const TotalSaleRecord = () => {
           <View style={style.tableHeader}>
             <Text style={style.tableHeading}>Date</Text>
             <Text style={style.tableHeading}>Total Sale</Text>
+            <Text style={style.tableHeading}>Total Cost</Text>
             <Text style={style.tableHeading}>Total Expenses</Text>
             <Text style={style.tableHeading}>Profit/Loss</Text>
           </View>
@@ -94,6 +99,7 @@ const TotalSaleRecord = () => {
             <View style={style.tableRow} key={key}>
               <Text style={style.tableData}>{item.label}</Text>
               <Text style={style.tableData}>{item.total_sales}</Text>
+              <Text style={style.tableData}>{item.total_cost}</Text>
               <Text style={style.tableData}>{item.total_expenses}</Text>
               <Text style={style.tableData}>{item.profit_or_loss}</Text>
             </View>
